@@ -4,6 +4,7 @@ import utils
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def main_page():
     candidates_list = utils.candidates_load("candidates.json")
@@ -16,7 +17,7 @@ def candidate_page(id):
     for candidate in candidates_list:
         if candidate["id"] == id:
             return (
-                f""""<img src = '{candidate["picture"]}'>"""
+                f"""<img src = '{candidate["picture"]}'>"""
                 f"""{utils.format_candidate([candidate])}"""
             )
 
@@ -24,10 +25,12 @@ def candidate_page(id):
 @app.route("/skills/<skill>")
 def skills_page(skill):
     candidates_list = utils.candidates_load("candidates.json")
+    candidates_by_skills = []
     for candidate in candidates_list:
-        if skill in candidate["skills"].split(", "):
-            return utils.format_candidate([candidate])
+        if skill.lower() in candidate["skills"].lower().split(", "):
+            candidates_by_skills.append(candidate)
 
+    return utils.format_candidate(candidates_by_skills)
 
 
 app.run()
